@@ -333,7 +333,7 @@ module GoogleSpreadsheet
         # checks for various errors and throws if an error is found.
         # meant to be chainable, so return the response back
         def check_for_errors(response)
-          if response.body =~ "Token invalid - AuthSub token has wrong scope"
+          if response.body =~ /Token invalid - AuthSub token has wrong scope/
             raise AuthSubTokenError, "Token invalid, HTML returned was #{response.body}"
           end
           return response
