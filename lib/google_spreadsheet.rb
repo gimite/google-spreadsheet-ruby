@@ -252,7 +252,7 @@ module GoogleSpreadsheet
         #   session.create_spreadsheet("My new sheet")
         def create_spreadsheet(
             title = "Untitled",
-            feed_url = "https://docs.google.com/feeds/documents/private/full")
+            feed_url = "https://spreadsheets.google.com/feeds/spreadsheets/private/full")
           xml = <<-"EOS"
             <atom:entry xmlns:atom="http://www.w3.org/2005/Atom" xmlns:docs="http://schemas.google.com/docs/2007">
               <atom:category scheme="http://schemas.google.com/g/2005#kind"
