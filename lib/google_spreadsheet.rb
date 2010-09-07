@@ -265,7 +265,7 @@ module GoogleSpreadsheet
             ss_url = as_utf8(found_item[0]["href"])
             return Spreadsheet.new(self, ss_url, title)
           else
-            raise Error, "Could not find link to worksheetsfeed (found_item was #{found_item}) in #{doc.body}"
+            raise Error, "Could not find link to worksheetsfeed (found_item was #{found_item}) in #{doc.to_html}"
           end
         end
         
