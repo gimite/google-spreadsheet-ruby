@@ -258,9 +258,15 @@ module GoogleSpreadsheet
           EOS
 
           doc = request(:post, feed_url, :data => xml, :auth => :writely)
-          ss_url = as_utf8(doc.search(
-            "link[@rel='http://schemas.google.com/spreadsheets/2006#worksheetsfeed']")[0]["href"])
-          return Spreadsheet.new(self, ss_url, title)
+          ss_url = nil
+          found_item = doc.search(
+            "link[@rel='http://schemas.google.com/spreadsheets/2006#worksheetsfeed']")
+          if found_item
+            ss_url = as_utf8(found_item[0]["href"])
+            return Spreadsheet.new(self, ss_url, title)
+          else
+            raise Error, "Could not find link to worksheetsfeed in #{doc.body}"
+          end
         end
         
         def request(method, url, params = {}) #:nodoc:
