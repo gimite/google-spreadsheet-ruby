@@ -120,7 +120,11 @@ module GoogleSpreadsheet
         
     end
     
-    
+    # Raised when Google Spreadsheets gives you back a 
+    # "Token invalid - AuthSub token has wrong scope" page
+    class AuthSubTokenError < GoogleSpreadsheet::Error
+    end
+
     # Use GoogleSpreadsheet.login or GoogleSpreadsheet.saved_session to get
     # GoogleSpreadsheet::Session object.
     class Session
@@ -289,6 +293,7 @@ module GoogleSpreadsheet
             else
               response = @oauth_token.__send__(method, url, data, add_header)
             end
+            check_for_errors(response)
             return convert_response(response, response_type)
             
           else
@@ -314,6 +319,8 @@ module GoogleSpreadsheet
                     "Response code #{response.code} for #{method} #{url}: " +
                     CGI.unescapeHTML(response.body))
                 end
+
+                check_for_errors(response)
                 return convert_response(response, response_type)
               end
             end
@@ -322,7 +329,16 @@ module GoogleSpreadsheet
         end
         
       private
-        
+
+        # checks for various errors and throws if an error is found.
+        # meant to be chainable, so return the response back
+        def check_for_errors(response)
+          if response.body =~ "Token invalid - AuthSub token has wrong scope"
+            raise AuthSubTokenError, "Token invalid, HTML returned was #{response.body}"
+          end
+          return response
+        end
+
         def convert_response(response, response_type)
           case response_type
             when :xml
