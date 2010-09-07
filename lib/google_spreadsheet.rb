@@ -261,11 +261,11 @@ module GoogleSpreadsheet
           ss_url = nil
           found_item = doc.search(
             "link[@rel='http://schemas.google.com/spreadsheets/2006#worksheetsfeed']")
-          if found_item
+          if found_item && found_item[0]
             ss_url = as_utf8(found_item[0]["href"])
             return Spreadsheet.new(self, ss_url, title)
           else
-            raise Error, "Could not find link to worksheetsfeed in #{doc.body}"
+            raise Error, "Could not find link to worksheetsfeed (found_item was #{found_item}) in #{doc.body}"
           end
         end
         
