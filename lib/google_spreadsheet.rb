@@ -337,9 +337,9 @@ module GoogleSpreadsheet
             raise AuthSubTokenError, "Token invalid, HTML returned was #{response.body}"
           end
 
-          unless response.status == Net::HTTPSuccess
+          unless response == Net::HTTPSuccess
             raise Net::HTTPBadResponse,
-                "status: #{response.header['status']}\nbody: #{response.body}"
+                "HTTP Error Code: #{response.code}\nbody: #{response.body}"
           end
           return response
         end
