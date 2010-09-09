@@ -336,6 +336,11 @@ module GoogleSpreadsheet
           if response.body =~ /Token invalid - AuthSub token has wrong scope/
             raise AuthSubTokenError, "Token invalid, HTML returned was #{response.body}"
           end
+
+          unless response.status == Net::HTTPSuccess
+            raise Net::HTTPBadResponse,
+                "status: #{@response.header['status']}\nbody: #{@response.body}"
+          end
           return response
         end
 
