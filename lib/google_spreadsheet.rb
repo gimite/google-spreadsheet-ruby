@@ -339,7 +339,7 @@ module GoogleSpreadsheet
 
           unless response.status == Net::HTTPSuccess
             raise Net::HTTPBadResponse,
-                "status: #{@response.header['status']}\nbody: #{@response.body}"
+                "status: #{response.header['status']}\nbody: #{response.body}"
           end
           return response
         end
