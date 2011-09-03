@@ -680,7 +680,9 @@ module GoogleSpreadsheet
         def initialize(session, spreadsheet, cells_feed_url, title = nil) #:nodoc:
           @session = session
           @spreadsheet = spreadsheet
-          @cells_feed_url = cells_feed_url
+          # XXX : This is needed to avoid problems with Google Apps Marketplace application that usually use 2 legged OAuth.
+          # It may not be the most optimal solution but it is a temporary workaround...
+          @cells_feed_url = cells_feed_url.gsub(/\?xoauth_requestor_id=(.*)$/, '')
           @title = title
 
           @cells = nil
