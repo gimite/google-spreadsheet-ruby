@@ -6,6 +6,7 @@ require "test/unit"
 require "google_spreadsheet"
 require "highline"
 
+require "two-legged-oauth"
 
 class TC_GoogleSpreadsheet < Test::Unit::TestCase
     
@@ -95,5 +96,45 @@ class TC_GoogleSpreadsheet < Test::Unit::TestCase
         find(){ |s| s.title == ss_copy_title })
       ss.delete(true)
     end
-    
+
+    def test_two_legged_oauth
+      puts("This test will create spreadsheets with your account, read/write them")
+      puts("and finally delete them (if everything goes well).")
+
+      highline = HighLine.new()
+      key = highline.ask("Consumer key: ")
+      secret = highline.ask("Consumer key secret: ")
+      xoauth_requestor_id = highline.ask("xoauth_requestor_id: ")
+
+      access_token = OAuth::TwoLeggedAccessToken.new(OAuth::Consumer.new(key, secret), xoauth_requestor_id)
+      session = GoogleSpreadsheet.login_with_oauth(access_token)
+
+      spreadsheet = session.create_spreadsheet("Automated two-legged-oauth test spreadsheet #{Time.now}")
+      assert_not_nil fetched_spreadsheet = session.spreadsheet_by_key(spreadsheet.key)
+      assert_equal spreadsheet.title, fetched_spreadsheet.title
+
+      assert_not_nil spreadsheet.worksheets
+      assert_not_nil worksheet = spreadsheet.worksheets[0]
+
+      assert_not_nil worksheet.cells
+
+      for row in 1..5 do
+        for column in 1..10 do
+          worksheet[row, column] = "#{row}_#{column}"
+        end
+      end
+      assert_nothing_raised do
+        worksheet.save
+      end
+
+      fetched_worksheet = session.spreadsheet_by_key(spreadsheet.key).worksheets[0]
+      for row in 1..5 do
+        for column in 1..10 do
+          assert_equal worksheet[row, column], fetched_worksheet[row, column]
+        end
+      end
+
+      spreadsheet.delete(true)
+    end
+
 end
