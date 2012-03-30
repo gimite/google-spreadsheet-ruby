@@ -130,6 +130,18 @@ module GoogleSpreadsheet
           return Spreadsheet.new(self, url)
         end
 
+        # Returns GoogleSpreadsheet::Spreadsheet with given +title+.
+        # Returns nil if not found.
+        def spreadsheet_by_title(title)
+          spreadsheets({'title' => title})[0]
+        end
+
+        # Returns GoogleSpreadsheet::Spreadsheet with given +title+.
+        # Returns new GoogleSpreadsheet::Spreadsheet if not found.
+        def spreadsheet_by_title_or_create(title)
+          spreadsheet_by_title(title) || create_spreadsheet(title)
+        end
+
         # Returns GoogleSpreadsheet::Spreadsheet with given +url+. You must specify either of:
         # - URL of the page you open to access the spreadsheet in your browser
         # - URL of worksheet-based feed of the spreadseet

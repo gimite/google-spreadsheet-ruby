@@ -72,6 +72,10 @@ class TC_GoogleSpreadsheet < Test::Unit::TestCase
       assert_equal("3", ss2.worksheets[0][1, 1])
       assert_equal("hoge", ss2.worksheet_by_title("hoge").title)
       assert_equal(nil, ss2.worksheet_by_title("foo"))
+
+      ss2.worksheet_by_title_or_add("huga")
+      assert_equal("huga", ss2.worksheet_by_title("huga").title)
+
       if RUBY_VERSION >= "1.9.0"
         assert_equal(Encoding::UTF_8, ss2.title.encoding)
         assert_equal(Encoding::UTF_8, ss2.worksheets[0].title.encoding)
@@ -132,6 +136,17 @@ class TC_GoogleSpreadsheet < Test::Unit::TestCase
       ws[2, 1] = "5"
       ws["A2"] = "555"
       assert_equal("555", ws[2, 1])
+
+      ss_by_title = session.spreadsheet_by_title(ss_title)
+      assert_equal(ss_by_title.human_url, ss.human_url)
+
+      sleep 1
+      ss_new_title = "google-spreadsheet-ruby test " + Time.now.strftime("%Y-%m-%d-%H-%M-%S")
+      assert_nil(session.spreadsheet_by_title(ss_new_title))
+
+      ss_new = session.spreadsheet_by_title_or_create(ss_new_title)
+      assert_not_equal(ss_new.human_url, ss.human_url)
+      ss_new.delete()
 
       ss.delete()
       assert_nil(session.spreadsheets("title" => ss_title).
