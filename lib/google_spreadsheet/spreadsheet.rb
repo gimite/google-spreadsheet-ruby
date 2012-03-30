@@ -215,6 +215,13 @@ module GoogleSpreadsheet
         def worksheet_by_title(title)
           return self.worksheets.find(){ |ws| ws.title == title }
         end
+        
+
+        # Returns a GoogleSpreadsheet::Worksheet with the given title in the spreadsheet.
+        # Returns added GoogleSpreadsheet::Worksheet if not found.
+        def worksheet_by_title_or_add(title)
+          worksheet_by_title(title) || add_worksheet(title)
+        end
 
         # Adds a new worksheet to the spreadsheet. Returns added GoogleSpreadsheet::Worksheet.
         def add_worksheet(title, max_rows = 100, max_cols = 20)
