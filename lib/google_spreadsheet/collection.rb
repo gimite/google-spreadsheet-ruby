@@ -15,12 +15,12 @@ module GoogleSpreadsheet
         
         def initialize(session, collection_feed_url) #:nodoc:
           @session = session
-          @collection_feed_url = collection_feed_url
+          self.collection_feed_url = collection_feed_url
         end
         
         # Adds the given GoogleSpreadsheet::Spreadsheet to the collection.
         def add(spreadsheet)
-          contents_url = concat_url(@collection_feed_url, "/contents")
+          contents_url = concat_url(self.collection_feed_url, "/contents")
           header = {"GData-Version" => "3.0", "Content-Type" => "application/atom+xml"}
           xml = <<-"EOS"
             <entry xmlns="http://www.w3.org/2005/Atom">
@@ -34,7 +34,7 @@ module GoogleSpreadsheet
 
         # Returns all the spreadsheets in the collection.
         def spreadsheets
-          contents_url = concat_url(@collection_feed_url, "/contents")
+          contents_url = concat_url(self.collection_feed_url, "/contents")
           header = {"GData-Version" => "3.0", "Content-Type" => "application/atom+xml"}
           doc = @session.request(:get, contents_url, :header => header, :auth => :writely)
 
@@ -44,6 +44,19 @@ module GoogleSpreadsheet
               "link[@rel='http://schemas.google.com/spreadsheets/2006#worksheetsfeed']")[0]["href"]
             GoogleSpreadsheet::Spreadsheet.new(@session, url, title)
           end
+        end
+
+        # Browrser's addressbar url covert to collection_feed_url
+        def collection_feed_url=(url)
+          if url.include? 'folders/'
+            @collection_feed_url = "http://docs.google.com/feeds/default/private/full/folder%3A" + url.split('folders/')[-1]
+          else
+            @collection_feed_url = url
+          end
+        end
+
+        def collection_feed_url
+          @collection_feed_url
         end
         
         # TODO Add other operations.
