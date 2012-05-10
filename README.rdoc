@@ -1,64 +1,17 @@
-This is a Ruby 1.8/1.9 library to read/write Google Spreadsheet.
+This library is now part of google_drive gem: https://github.com/gimite/google-drive-ruby
 
+<b>For new code</b>: I suggest to use google_drive gem directly.
 
-= How to install
+<b>For existing code</b>: You can keep using google-spreadsheet-ruby gem. Now google-spreadsheet-ruby is a library which simply does:
 
-  $ sudo gem install google-spreadsheet-ruby
+  require "google_drive"
+  GoogleSpreadsheet = GoogleDrive
+
+and it provides the same API as before.
 
 Note that gimite-google-spreadsheet-ruby at gems.github.com is no longer updated, because github stopped hosting it.
 
-
-= How to use
-
-Example:
-  
-  require "rubygems"
-  require "google_spreadsheet"
-  
-  # Logs in.
-  # You can also use OAuth. See document of
-  # GoogleSpreadsheet.login_with_oauth for details.
-  session = GoogleSpreadsheet.login("username@gmail.com", "mypassword")
-  
-  # First worksheet of
-  # https://docs.google.com/spreadsheet/ccc?key=pz7XtlQC-PYx-jrVMJErTcg
-  ws = session.spreadsheet_by_key("pz7XtlQC-PYx-jrVMJErTcg").worksheets[0]
-  
-  # Gets content of A2 cell.
-  p ws[2, 1] #==> "hoge"
-  
-  # Changes content of cells.
-  # Changes are not sent to the server until you call ws.save().
-  ws[2, 1] = "foo"
-  ws[2, 2] = "bar"
-  ws.save()
-  
-  # Dumps all cells.
-  for row in 1..ws.num_rows
-    for col in 1..ws.num_cols
-      p ws[row, col]
-    end
-  end
-  
-  # Yet another way to do so.
-  p ws.rows #==> [["fuga", ""], ["foo", "bar]]
-  
-  # Reloads the worksheet to get changes by other clients.
-  ws.reload()
-
-API document: http://gimite.net/gimite/rubymess/google-spreadsheet-ruby/
-
-
-= Source code
-
-http://github.com/gimite/google-spreadsheet-ruby
-
-The license of this source is "New BSD Licence"
-
-
-= Supported environments
-
-Ruby 1.8.x and Ruby 1.9.x. Checked with Ruby 1.8.7 and Ruby 1.9.3.
+API document: http://gimite.net/doc/google-drive-ruby/
 
 
 = Author
