@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.description = "This is a library to read/write Google Spreadsheet."
   s.homepage = "https://github.com/gimite/google-spreadsheet-ruby"
   s.rubygems_version = "1.2.0"
+  s.license = "New BSD"
   
   s.files = ["README.rdoc"] + Dir["lib/**/*"]
   s.require_paths = ["lib"]
