@@ -11,8 +11,6 @@ and it provides the same API as before.
 
 Note that gimite-google-spreadsheet-ruby at gems.github.com is no longer updated, because github stopped hosting it.
 
-API document: http://gimite.net/doc/google-drive-ruby/
-
 
 = Author
 
